@@ -11,9 +11,15 @@ auth.set_access_token(access_token, access_secret)
  
 api = tweepy.API(auth)
 
-public_tweets = api.home_timeline()
-for tweet in public_tweets:
-    print(tweet.text)
+# public_tweets = api.home_timeline()
+# for tweet in public_tweets:
+#     print(tweet.text)
+
+user = api.get_user('RuesgaSkyler')
+print(user.screen_name)
+print(user.followers_count)
+for friend in user.friends():
+   print(friend.screen_name)
 
 # print('x')
 # raise TypeError
