@@ -1,5 +1,6 @@
 import tweepy
 import json
+import mongo.py
 from tweepy import OAuthHandler
 from tweepy import Cursor
  
@@ -33,9 +34,6 @@ def get_twitter_client():
 	auth = get_twitter_auth() 
 	client = tweepy.API(auth) 
 	return client
-
-def process_tweet(tweet):
-	print(json.dumps(tweet))
 
 def get_timeline():
 	client = get_twitter_client() 
