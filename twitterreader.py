@@ -39,7 +39,7 @@ def process_tweet(tweet):
 
 def get_timeline():
 	client = get_twitter_client() 
-	for tweet in tweepy.Cursor(api.user_timeline).items():
+	for tweet in tweepy.Cursor(client.user_timeline).items():
 		process_tweet(tweet._json)
 
 get_timeline()
