@@ -1,11 +1,45 @@
 import tweepy
 import json
-import mongo.py
 from tweepy import OAuthHandler
 from tweepy import Cursor
+from pymongo import MongoClient
  
 # access_token = '3320969365-Epm7HFGVOuPYKScLJYOpT9sMJMJHl1NvpNEnhn0'
 # access_secret = '7saqiEs5O6slpaqdXbJEZ9BAtRcI3HVceqWTUAEKslcRc'
+
+
+#Make a connection to localhost
+connection = MongoClient()
+
+#initialize and assign collection
+db = connection.data
+
+#dump all tweets into db.tweets collection
+def process_tweet(tweet):
+	db.tweets.insert(tweet)
+
+	#sorts tweets from oldest to newest
+	#timeline = db.tweets.find({}).sort({'created_at': 1})
+
+	#obtain one document where its an original tweet
+	user = db.tweets.find_one({'retweet': False})
+
+
+	#get all tweets that aren't quoted or retweeted
+	tweets = db.tweets.find({'is_quote_status': False, 'retweeted': False, })
+
+	#gets all retweeted tweets
+	retweets = db.tweets.find({'retweeted': True})
+
+	#creates a dictionary of tweet id strings as keys and number of favorites as values
+	#fav_dict = {}
+	#def favorites(tweet):
+	#	for t in tweet:
+	#		fav_dict[t["id_str"]] = t["favorite_count"]
+
+	#favorites(timeline)
+	 
+
 
 def get_twitter_auth():
 	# Setup Twitter autentication
@@ -41,6 +75,15 @@ def get_timeline():
 		process_tweet(tweet._json)
 
 get_timeline()
+
+
+
+#db.tweets.drop()
+
+
+
+
+
 # api.update_status('@RuesgaSkyler tweepy + oauth!')
 
 # public_tweets = api.home_timeline()

@@ -1,4 +1,4 @@
-import twitterreader.py
+from twitterreader import *
 from pymongo import MongoClient
 
 
