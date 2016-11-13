@@ -34,13 +34,13 @@ def get_twitter_client():
 	client = tweepy.API(auth) 
 	return client
 
-def process_timeline(tweet):
+def process_tweet(tweet):
 	print(json.dumps(tweet))
 
 def get_timeline():
 	client = get_twitter_client() 
 	for tweet in tweepy.Cursor(api.user_timeline).items():
-		process_timeline(tweet._json)
+		process_tweet(tweet._json)
 
 get_timeline()
 # api.update_status('@RuesgaSkyler tweepy + oauth!')
