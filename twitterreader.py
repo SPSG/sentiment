@@ -19,17 +19,16 @@ def process_tweet(tweet):
 	db.tweets.insert(tweet)
 
 	#sorts tweets from oldest to newest
-	#timeline = db.tweets.find({}).sort({'created_at': 1})
+	#timeline = db.tweets.find().sort({'created_at': 1})
 
 	#obtain one document where its an original tweet
-	user = db.tweets.find_one({'retweet': False})
-
+	user_cursor = db.tweets.find({'retweet': False})
 
 	#get all tweets that aren't quoted or retweeted
-	tweets = db.tweets.find({'is_quote_status': False, 'retweeted': False, })
+	tweets_cursor = db.tweets.find({'is_quote_status': False, 'retweeted': False, })
 
 	#gets all retweeted tweets
-	retweets = db.tweets.find({'retweeted': True})
+	retweets_cursor = db.tweets.find({'retweeted': True})
 
 	#creates a dictionary of tweet id strings as keys and number of favorites as values
 	#fav_dict = {}
@@ -38,7 +37,9 @@ def process_tweet(tweet):
 	#		fav_dict[t["id_str"]] = t["favorite_count"]
 
 	#favorites(timeline)
-	 
+
+	for user in user_cursor:
+		print(user)
 
 
 def get_twitter_auth():
