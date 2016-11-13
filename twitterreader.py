@@ -7,7 +7,6 @@ from pymongo import MongoClient
 # access_token = '3320969365-Epm7HFGVOuPYKScLJYOpT9sMJMJHl1NvpNEnhn0'
 # access_secret = '7saqiEs5O6slpaqdXbJEZ9BAtRcI3HVceqWTUAEKslcRc'
 
-
 #Make a connection to localhost
 connection = MongoClient()
 
@@ -65,34 +64,25 @@ def get_twitter_auth():
 	auth.set_access_token(key, secret)
 	return auth
 
-def get_twitter_client():
-	auth = get_twitter_auth() 
+def get_twitter_bot():
+	consumer_key = 'ZZHlgZYoCR72HWvqZ4LbFMNcb'
+	consumer_secret = 'Gx2g9Z5DwaBI3Bq0JyxK5pAwwPWqSdN4t1rf5mhghEhwMXGjzm'
+	key = '3320969365-Epm7HFGVOuPYKScLJYOpT9sMJMJHl1NvpNEnhn0'
+	secret = '7saqiEs5O6slpaqdXbJEZ9BAtRcI3HVceqWTUAEKslcRc'
+	auth = OAuthHandler(consumer_key, consumer_secret)
+	auth.set_access_token(key, secret)
+	return auth
+
+def get_twitter_client(auth): #pass in the authentication testing or user specific
 	client = tweepy.API(auth) 
 	return client
 
-def get_timeline():
-	client = get_twitter_client() 
+def get_user_timeline():
+	# change the line below to reflect whether testing or not
+	client = get_twitter_client(get_twitter_bot()) 
 	for tweet in tweepy.Cursor(client.user_timeline).items():
 		process_tweet(tweet._json)
 
-get_timeline()
-
-
+get_user_timeline()
 
 #db.tweets.drop()
-
-
-
-
-
-# api.update_status('@RuesgaSkyler tweepy + oauth!')
-
-# public_tweets = api.home_timeline()
-# for tweet in public_tweets:
-#     print(tweet.text)
-
-# user = api.get_user('RuesgaSkyler')
-# print(user.screen_name)
-# print(user.followers_count)
-# for friend in user.friends():
-#    print(friend.screen_name)
