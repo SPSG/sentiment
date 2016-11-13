@@ -8,11 +8,12 @@ connection = MongoClient()
 #initialize and assign collection
 db = connection.data
 
-timeline = db.tweets.find({}).sort({created_at: 1}) 
-
-
 def process_tweet(tweet):
 	db.tweets.insert_many(json.dumps(tweet))
+
+
+timeline = db.tweets.find({}).sort({created_at: 1}) 
+
 
 #obtain one document where its an original tweet
 user = db.tweets.findOne({retweet: false})["author"]
