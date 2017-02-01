@@ -86,7 +86,3 @@ def favorites(tweet):
 favorites(timeline)
 
 pprint(user_cursor)
-
-
-db.tweets.drop()
-connection.close()
