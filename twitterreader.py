@@ -1,9 +1,8 @@
 import tweepy
 import json
-from tweepy import OAuthHandler
-from tweepy import Cursor
 from pymongo import MongoClient
-from pprint import pprint
+from pprint import * 
+import webbrowser
  
 # access_token = '3320969365-Epm7HFGVOuPYKScLJYOpT9sMJMJHl1NvpNEnhn0'
 # access_secret = '7saqiEs5O6slpaqdXbJEZ9BAtRcI3HVceqWTUAEKslcRc'
@@ -11,21 +10,22 @@ from pprint import pprint
 #Make a connection to localhost
 connection = MongoClient()
 
-#initialize and assign collection
+#initialize and assign collection to a database
 db = connection.data
 
 def get_twitter_auth():
 	# Setup Twitter autentication
 	consumer_key = 'ZZHlgZYoCR72HWvqZ4LbFMNcb'
 	consumer_secret = 'Gx2g9Z5DwaBI3Bq0JyxK5pAwwPWqSdN4t1rf5mhghEhwMXGjzm'
-	auth = OAuthHandler(consumer_key, consumer_secret)
+	callback_url = "https://testing-6f08d.firebaseapp.com/__/auth/handler"
+	auth = tweepy.OAuthHandler(consumer_key, consumer_secret, callback_url)
 	try:
 		redirect_url = auth.get_authorization_url()
+		webbrowser.open_new_tab(redirect_url)
 	except tweepy.TweepError:
 		print('Error! Failed to get request token.')
 
-	print(redirect_url)
-	verifier = input('Verifier:')
+	verifier = auth.GET.get('oauth_verifier')
 
 	try:
 		auth.get_access_token(verifier)
@@ -37,14 +37,14 @@ def get_twitter_auth():
 	auth.set_access_token(key, secret)
 	return auth
 
-def get_twitter_bot():
-	consumer_key = 'ZZHlgZYoCR72HWvqZ4LbFMNcb'
-	consumer_secret = 'Gx2g9Z5DwaBI3Bq0JyxK5pAwwPWqSdN4t1rf5mhghEhwMXGjzm'
-	key = '3320969365-Epm7HFGVOuPYKScLJYOpT9sMJMJHl1NvpNEnhn0'
-	secret = '7saqiEs5O6slpaqdXbJEZ9BAtRcI3HVceqWTUAEKslcRc'
-	auth = OAuthHandler(consumer_key, consumer_secret)
-	auth.set_access_token(key, secret)
-	return auth
+# def get_twitter_bot():
+# 	consumer_key = 'ZZHlgZYoCR72HWvqZ4LbFMNcb'
+# 	consumer_secret = 'Gx2g9Z5DwaBI3Bq0JyxK5pAwwPWqSdN4t1rf5mhghEhwMXGjzm'
+# 	key = '3320969365-Epm7HFGVOuPYKScLJYOpT9sMJMJHl1NvpNEnhn0'
+# 	secret = '7saqiEs5O6slpaqdXbJEZ9BAtRcI3HVceqWTUAEKslcRc'
+# 	auth = OAuthHandler(consumer_key, consumer_secret)
+# 	auth.set_access_token(key, secret)
+# 	return auth
 
 def get_twitter_client(auth): #pass in the authentication testing or user specific
 	client = tweepy.API(auth) 
@@ -52,7 +52,7 @@ def get_twitter_client(auth): #pass in the authentication testing or user specif
 
 def get_user_timeline():
 	# change the line below to reflect whether testing or not
-	client = get_twitter_client(get_twitter_bot()) 
+	client = get_twitter_client(get_twitter_auth()) 
 	for tweet in tweepy.Cursor(client.user_timeline).items():
 		db.tweets.insert(tweet._json)
 
